@@ -68,23 +68,56 @@
     <script>
         const box = document.getElementById('fidget-box');
         
-        let currentRotation = 0;
-        let isAnimating = false;
+        let targetRotation = 0;
+        let spinTimer = null;
+        let currentDirection = 0; // 0 = idle, -1 = left, 1 = right
+        let hasQueuedSpin = false;
 
         function spinLeft() {
-            if (isAnimating) return; 
-            isAnimating = true;
-            currentRotation -= 90;
-            box.style.transform = `rotate(${currentRotation}deg)`;
-            setTimeout(() => { isAnimating = false; }, 400); 
+            if (currentDirection === 0) {
+                // Box is idle, spin left
+                executeSpin(-1);
+            } else if (currentDirection === -1) {
+                // Already spinning left, queue up one more spin
+                hasQueuedSpin = true;
+            } else if (currentDirection === 1) {
+                // Spinning right, cancel queue and reverse immediately
+                hasQueuedSpin = false;
+                executeSpin(-1);
+            }
         }
 
         function spinRight() {
-            if (isAnimating) return; 
-            isAnimating = true;
-            currentRotation += 90;
-            box.style.transform = `rotate(${currentRotation}deg)`;
-            setTimeout(() => { isAnimating = false; }, 400);
+            if (currentDirection === 0) {
+                // Box is idle, spin right
+                executeSpin(1);
+            } else if (currentDirection === 1) {
+                // Already spinning right, queue up one more spin
+                hasQueuedSpin = true;
+            } else if (currentDirection === -1) {
+                // Spinning left, cancel queue and reverse immediately
+                hasQueuedSpin = false;
+                executeSpin(1);
+            }
+        }
+
+        function executeSpin(direction) {
+            targetRotation += direction * 90;
+            box.style.transform = `rotate(${targetRotation}deg)`;
+            currentDirection = direction;
+            
+            // Clear the timer if we are interrupting a current spin
+            clearTimeout(spinTimer);
+            
+            // Set a new timer for the 400ms transition
+            spinTimer = setTimeout(() => {
+                if (hasQueuedSpin) {
+                    hasQueuedSpin = false;
+                    executeSpin(currentDirection); // Fire the queued spin
+                } else {
+                    currentDirection = 0; // Go back to idle
+                }
+            }, 400); 
         }
 
         function changeColor() {
