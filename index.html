@@ -25,17 +25,15 @@
             transition: all 0.4s ease;
             box-shadow: 0 10px 20px rgba(0,0,0,0.3);
         }
-        .spinning {
-            animation: spin 1.5s linear infinite;
-        }
-        @keyframes spin {
-            100% { transform: rotate(360deg); }
+        .glowing {
+            box-shadow: 0 0 40px 15px rgba(255, 255, 255, 0.8) !important;
         }
         .button-container {
             display: flex;
             gap: 10px;
             flex-wrap: wrap;
             justify-content: center;
+            max-width: 350px;
         }
         button {
             padding: 12px 20px;
@@ -59,16 +57,34 @@
     <div id="fidget-box"></div>
     
     <div class="button-container">
-        <button onclick="toggleSpin()">Spin / Stop</button>
+        <button onclick="spinLeft()">Spin Left</button>
+        <button onclick="spinRight()">Spin Right</button>
         <button onclick="changeColor()">Change Color</button>
         <button onclick="toggleShape()">Square / Circle</button>
+        <button onclick="changeSize()">Change Size</button>
+        <button onclick="pulseGlow()">Glow!</button>
     </div>
 
     <script>
         const box = document.getElementById('fidget-box');
+        
+        let currentRotation = 0;
+        let isAnimating = false;
 
-        function toggleSpin() {
-            box.classList.toggle('spinning');
+        function spinLeft() {
+            if (isAnimating) return; 
+            isAnimating = true;
+            currentRotation -= 90;
+            box.style.transform = `rotate(${currentRotation}deg)`;
+            setTimeout(() => { isAnimating = false; }, 400); 
+        }
+
+        function spinRight() {
+            if (isAnimating) return; 
+            isAnimating = true;
+            currentRotation += 90;
+            box.style.transform = `rotate(${currentRotation}deg)`;
+            setTimeout(() => { isAnimating = false; }, 400);
         }
 
         function changeColor() {
@@ -83,6 +99,17 @@
             } else {
                 box.style.borderRadius = '50%';
             }
+        }
+
+        function changeSize() {
+            const newSize = Math.floor(Math.random() * 120) + 100;
+            box.style.width = `${newSize}px`;
+            box.style.height = `${newSize}px`;
+        }
+
+        function pulseGlow() {
+            box.classList.add('glowing');
+            setTimeout(() => { box.classList.remove('glowing'); }, 400);
         }
     </script>
 
