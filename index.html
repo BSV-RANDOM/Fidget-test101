@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Fidget Box</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background-color: #2b2b36;
+            color: white;
+            font-family: sans-serif;
+            margin: 0;
+        }
+        #fidget-box {
+            width: 150px;
+            height: 150px;
+            background-color: #61dafb;
+            border-radius: 10px;
+            margin-bottom: 40px;
+            transition: all 0.4s ease;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+        }
+        .spinning {
+            animation: spin 1.5s linear infinite;
+        }
+        @keyframes spin {
+            100% { transform: rotate(360deg); }
+        }
+        .button-container {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        button {
+            padding: 12px 20px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 8px;
+            border: none;
+            background: #ffffff;
+            color: #333;
+            transition: transform 0.1s;
+        }
+        button:active {
+            transform: scale(0.90);
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Fidget Box</h1>
+    <div id="fidget-box"></div>
+    
+    <div class="button-container">
+        <button onclick="toggleSpin()">Spin / Stop</button>
+        <button onclick="changeColor()">Change Color</button>
+        <button onclick="toggleShape()">Square / Circle</button>
+    </div>
+
+    <script>
+        const box = document.getElementById('fidget-box');
+
+        function toggleSpin() {
+            box.classList.toggle('spinning');
+        }
+
+        function changeColor() {
+            const colors = ['#61dafb', '#ff6b6b', '#4ecdc4', '#ffe66d', '#c7f464', '#ff9ff3'];
+            const randomColor = colors[Math.floor(Math.random() * colors.length)];
+            box.style.backgroundColor = randomColor;
+        }
+
+        function toggleShape() {
+            if (box.style.borderRadius === '50%') {
+                box.style.borderRadius = '10px';
+            } else {
+                box.style.borderRadius = '50%';
+            }
+        }
+    </script>
+
+</body>
+</html>
